@@ -1,0 +1,3 @@
+export const SAVE_CONTACT = 'SAVE_CONTACT';
+export const DELETE_CONTACT = 'DELETE_CONTACT';
+export const FILTER_CONTACT = 'FILTER_CONTACT';
