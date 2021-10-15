@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch } from 'react-redux';
@@ -12,17 +12,9 @@ import { saveContact, delContact, filterContact } from './redux/actions';
 import './styles.css';
 
 export default function App() {
-    const [contacts, setContacts] = useState(() => {
-        return JSON.parse(window.localStorage.getItem('contacts')) ?? [];
-    });
+    const [contacts, setContacts] = useState([]);
 
-    const [filter, setFilter] = useState(() => {
-        return JSON.parse(window.localStorage.getItem('filter')) ?? '';
-    });
-
-    useEffect(() => {
-        window.localStorage.setItem('contacts', JSON.stringify(contacts));
-    }, [contacts]);
+    const [filter, setFilter] = useState('');
 
     const dispatch = useDispatch();
 
@@ -44,13 +36,11 @@ export default function App() {
     };
 
     const changeFilter = e => {
-        setFilter(e.currentTarget.value); // hooks is used
+        // setFilter(e.currentTarget.value); // hooks is used
         dispatch(filterContact(e.currentTarget.value)); //redux is used
     };
 
     const deleteContact = contactId => {
-        // console.log('delete was clicked');
-        // console.log(contactId);
         setContacts(contacts =>
             contacts.filter(contact => contact.id !== contactId),
         );
