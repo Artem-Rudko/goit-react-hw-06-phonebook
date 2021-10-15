@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
+import { useDispatch } from 'react-redux';
+
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList/ContactList';
 import Filter from './components/Filter/Filter';
-import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
+// import actions from './redux/actions';
+import { saveContact, delContact, filterContact } from './redux/actions';
+
 import './styles.css';
 
 export default function App() {
@@ -19,6 +24,8 @@ export default function App() {
         window.localStorage.setItem('contacts', JSON.stringify(contacts));
     }, [contacts]);
 
+    const dispatch = useDispatch();
+
     const addNewContact = data => {
         const normalizedData = data.name.toLowerCase();
         const dublicate = contacts.find(
@@ -32,11 +39,13 @@ export default function App() {
 
         dublicate
             ? alert(`${dublicate.name} is already in contacts`)
-            : setContacts(contacts => [newContact, ...contacts]);
+            : dispatch(saveContact(newContact));
+        setContacts(contacts => [newContact, ...contacts]);
     };
 
     const changeFilter = e => {
-        setFilter(e.currentTarget.value);
+        setFilter(e.currentTarget.value); // hooks is used
+        dispatch(filterContact(e.currentTarget.value)); //redux is used
     };
 
     const deleteContact = contactId => {
@@ -45,6 +54,7 @@ export default function App() {
         setContacts(contacts =>
             contacts.filter(contact => contact.id !== contactId),
         );
+        dispatch(delContact(contactId));
     };
 
     const normalizedFilter = filter.toLowerCase();
